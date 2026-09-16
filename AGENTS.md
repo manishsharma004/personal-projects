@@ -24,6 +24,7 @@ SvelteKit static site that lists personal projects published on GitHub Pages und
 - **Dev server:** `bun run dev -- --host 0.0.0.0 --port 5173`
 - **Local URL:** `http://localhost:5173/` (no base path in dev). Production builds use `BASE_PATH=/personal-projects` (no trailing slash; set in the deploy workflow).
 - **Build:** `BASE_PATH=/personal-projects bun run build` — output in `build/` (adapter-static).
+- **Card previews:** PNGs in `static/previews/` (regenerate with `bun add -d playwright && bunx playwright install chromium && bun run previews`).
 - **Prerender:** `src/routes/+layout.ts` exports `prerender = true` (required for `adapter-static`).
 - **UI verification:** use headless Playwright or `curl` against the dev server; do not assume `computerUse` unless the user requests it.
 
