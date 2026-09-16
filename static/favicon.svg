@@ -1,15 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Personal projects">
-	<defs>
-		<linearGradient id="bg" x1="8%" y1="0%" x2="92%" y2="100%">
-			<stop offset="0%" stop-color="#818cf8" />
-			<stop offset="100%" stop-color="#4f46e5" />
-		</linearGradient>
-	</defs>
-	<rect width="32" height="32" rx="8" fill="url(#bg)" />
-	<g fill="#fff">
-		<rect x="6" y="6" width="9" height="9" rx="2.2" opacity="0.95" />
-		<rect x="17" y="6" width="9" height="9" rx="2.2" opacity="0.85" />
-		<rect x="6" y="17" width="9" height="9" rx="2.2" opacity="0.85" />
-		<rect x="17" y="17" width="9" height="9" rx="2.2" opacity="0.75" />
+	<rect width="32" height="32" rx="7" fill="#0b1220" />
+	<g fill="#fafaf9">
+		<rect x="7" y="7" width="8" height="8" rx="1.5" />
+		<rect x="17" y="7" width="8" height="8" rx="1.5" opacity="0.85" />
+		<rect x="7" y="17" width="8" height="8" rx="1.5" opacity="0.85" />
+		<rect x="17" y="17" width="8" height="8" rx="1.5" opacity="0.7" />
 	</g>
+	<rect x="6" y="28" width="20" height="2" rx="1" fill="#2563eb" />
 </svg>

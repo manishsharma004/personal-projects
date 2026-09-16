@@ -6,14 +6,17 @@
 
 <article class="card">
 	<header>
-		<h2>{project.title}</h2>
-		<ul class="tags" aria-label="Technologies">
-			{#each project.tags as tag}
-				<li>{tag}</li>
+		<h2>
+			<a href={project.liveUrl} target="_blank" rel="noopener noreferrer">{project.title}</a>
+		</h2>
+		<p class="tags" aria-label="Technologies">
+			{#each project.tags as tag, i}
+				{#if i > 0}<span class="sep" aria-hidden="true">·</span>{/if}
+				<span>{tag}</span>
 			{/each}
-		</ul>
+		</p>
 	</header>
-	<p>{project.description}</p>
+	<p class="desc">{project.description}</p>
 	<div class="actions">
 		<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
 			Open site
@@ -38,93 +41,103 @@
 	.card {
 		display: flex;
 		flex-direction: column;
-		gap: 0.85rem;
-		padding: 1.25rem 1.35rem;
-		border-radius: 14px;
-		border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-		background: color-mix(in srgb, var(--surface) 92%, var(--accent) 8%);
-		box-shadow: 0 10px 30px color-mix(in srgb, var(--ink) 8%, transparent);
+		gap: 0.75rem;
+		height: 100%;
+		padding: 1.35rem 1.4rem 1.25rem;
+		background: inherit;
+		transition: background 0.15s ease;
+	}
+
+	.card:hover {
+		background: var(--surface);
 	}
 
 	header {
 		display: flex;
 		flex-direction: column;
-		gap: 0.55rem;
+		gap: 0.35rem;
 	}
 
 	h2 {
 		margin: 0;
-		font-size: 1.15rem;
-		font-weight: 650;
-		letter-spacing: -0.02em;
+		font-family: var(--font-serif);
+		font-size: 1.2rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.25;
+	}
+
+	h2 a {
+		color: var(--ink);
+		text-decoration: none;
+	}
+
+	h2 a:hover {
+		color: var(--accent);
 	}
 
 	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
 		margin: 0;
-		padding: 0;
-		list-style: none;
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		color: var(--faint);
+		letter-spacing: 0.02em;
 	}
 
-	.tags li {
-		font-size: 0.72rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		padding: 0.2rem 0.45rem;
-		border-radius: 999px;
-		background: color-mix(in srgb, var(--accent) 18%, transparent);
-		color: var(--accent-strong);
+	.sep {
+		margin-inline: 0.35rem;
+		opacity: 0.5;
 	}
 
-	p {
+	.desc {
 		margin: 0;
 		flex: 1;
 		color: var(--muted);
 		line-height: 1.55;
-		font-size: 0.95rem;
+		font-size: 0.94rem;
 	}
 
 	.actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: 0.45rem;
+		padding-top: 0.35rem;
 	}
 
 	.btn {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.45rem 0.85rem;
-		border-radius: 10px;
-		font-size: 0.875rem;
+		padding: 0.4rem 0.75rem;
+		border-radius: 8px;
+		font-size: 0.8125rem;
 		font-weight: 600;
 		text-decoration: none;
 		border: 1px solid transparent;
 		transition:
-			background 0.15s ease,
-			border-color 0.15s ease,
-			color 0.15s ease;
+			background 0.12s ease,
+			border-color 0.12s ease,
+			color 0.12s ease;
 	}
 
 	.primary {
-		background: var(--accent-strong);
-		color: var(--on-accent);
+		background: var(--accent);
+		color: #fff;
 	}
 
 	.primary:hover {
-		background: color-mix(in srgb, var(--accent-strong) 88%, white);
+		background: var(--accent-hover);
+		color: #fff;
 	}
 
 	.ghost {
-		border-color: color-mix(in srgb, var(--ink) 18%, transparent);
-		color: var(--ink);
+		border-color: var(--border);
+		color: var(--text);
+		background: transparent;
 	}
 
 	.ghost:hover {
-		border-color: var(--accent-strong);
-		color: var(--accent-strong);
+		border-color: var(--border-hover);
+		color: var(--accent);
 	}
 </style>
