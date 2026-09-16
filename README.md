@@ -30,4 +30,4 @@ Edit `src/lib/data/projects.ts` with the repo name, description, tags, and live 
 
 ## Deploy
 
-Pushes to `main` run `.github/workflows/deploy.yml` (Bun install, check, build, GitHub Pages).
+Copy `docs/github-pages-deploy.workflow.yml` to `.github/workflows/deploy.yml`, then enable **GitHub Pages → GitHub Actions** for this repo. Pushes to `main` run Bun install, check, build, and deploy the `build` folder.
