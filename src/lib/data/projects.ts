@@ -64,7 +64,8 @@ export const personalProjects: PersonalProject[] = [
 		description: 'Browser NES and SNES emulator with ROM library, shaders, and WebRTC multiplayer.',
 		tags: ['React', 'Emulation', 'WebRTC'],
 		liveUrl: `${pagesBase}/retro-games/`,
-		repoUrl: `${repoBase}/retro-games`
+		repoUrl: `${repoBase}/retro-games`,
+		architectureUrl: `${pagesBase}/retro-games/architecture/retro-games-runtime.architecture.html`
 	},
 	{
 		id: 'system-design-interview-prep',
