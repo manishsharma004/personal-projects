@@ -4,8 +4,8 @@
 	const shortcuts = [
 		{ keys: '/', desc: 'Focus search' },
 		{ keys: 'Esc', desc: 'Clear search / close help' },
-		{ keys: 'J / ↓', desc: 'Next project' },
-		{ keys: 'K / ↑', desc: 'Previous project' },
+		{ keys: 'J / ↓', desc: 'Next project (expands preview)' },
+		{ keys: 'K / ↑', desc: 'Previous project (expands preview)' },
 		{ keys: 'Enter / O', desc: 'Open focused project site' },
 		{ keys: 'S', desc: 'Open focused project source on GitHub' },
 		{ keys: 'A', desc: 'Open architecture map (when available)' },

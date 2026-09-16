@@ -9,7 +9,6 @@
 	let search = $state('');
 	let focusIndex = $state(0);
 	let helpOpen = $state(false);
-	let revealed = $state(false);
 	let searchInput = $state<HTMLInputElement | null>(null);
 
 	const filtered = $derived(
@@ -64,10 +63,6 @@
 	}
 
 	onMount(() => {
-		requestAnimationFrame(() => {
-			revealed = true;
-		});
-
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				if (helpOpen) {
@@ -172,7 +167,7 @@
 			Static sites and browser tools on
 			<a href="https://manishsharma004.github.io/" target="_blank" rel="noopener noreferrer"
 				>manishsharma004.github.io</a
-			>. Navigate with the keyboard — press <kbd>?</kbd> for shortcuts.
+			>. Use <kbd>J</kbd>/<kbd>K</kbd> to focus a project — the card expands with a live screenshot preview. Press <kbd>?</kbd> for shortcuts.
 		</p>
 	</section>
 
@@ -215,13 +210,18 @@
 		{#if filtered.length === 0}
 			<p class="empty">No projects match <code>{search}</code>. <button type="button" onclick={() => (search = '')}>Clear</button></p>
 		{:else}
-			<ul class="grid">
+			<ul class="project-list">
 				{#each filtered as project, i (project.id)}
 					<li
+						class:expanded={i === focusIndex}
 						onmouseenter={() => (focusIndex = i)}
 						onfocusin={() => (focusIndex = i)}
 					>
-						<ProjectCard {project} index={i} focused={i === focusIndex} {revealed} />
+						<ProjectCard
+							{project}
+							focused={i === focusIndex}
+							expanded={i === focusIndex}
+						/>
 					</li>
 				{/each}
 			</ul>
@@ -336,6 +336,10 @@
 		border-radius: 5px;
 		border: 1px solid var(--border);
 		background: var(--surface);
+	}
+
+	.lede kbd + kbd {
+		margin-left: 0.1rem;
 	}
 
 	.command-bar {
@@ -455,19 +459,23 @@
 		text-decoration: underline;
 	}
 
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-		gap: 0.75rem;
+	.project-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		align-items: stretch;
 	}
 
-	.grid > li {
+	.project-list > li {
 		display: flex;
 		min-width: 0;
+		transition: margin 0.25s ease;
+	}
+
+	.project-list > li.expanded {
+		margin-block: 0.35rem;
 	}
 
 	.foot {
