@@ -4,40 +4,43 @@
 
 	let {
 		project,
-		index = 0,
 		focused = false,
-		revealed = false
+		expanded = false
 	}: {
 		project: PersonalProject;
-		index?: number;
 		focused?: boolean;
-		revealed?: boolean;
+		expanded?: boolean;
 	} = $props();
 
 	const previewSrc = $derived(`${base}/previews/${project.id}.png`);
+	const showPreview = $derived(expanded || focused);
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <article
 	class="card"
 	class:focused
-	class:revealed
-	style={`--reveal-i: ${index}`}
+	class:expanded
 	tabindex={focused ? 0 : -1}
 	data-project-id={project.id}
 	aria-label={project.title}
+	aria-expanded={expanded}
 >
-	<a class="preview" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-		<img
-			src={previewSrc}
-			alt=""
-			width="960"
-			height="540"
-			loading="lazy"
-			decoding="async"
-		/>
-		<span class="preview-overlay" aria-hidden="true">Open live site →</span>
-	</a>
+	<div class="preview-reveal" class:open={showPreview}>
+		<div class="preview-reveal-inner">
+			<a class="preview" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+				<img
+					src={previewSrc}
+					alt=""
+					width="960"
+					height="540"
+					loading={expanded ? 'eager' : 'lazy'}
+					decoding="async"
+				/>
+				<span class="preview-overlay" aria-hidden="true">Open live site →</span>
+			</a>
+		</div>
+	</div>
 
 	<div class="body">
 		<header>
@@ -50,32 +53,30 @@
 				{/each}
 			</ul>
 		</header>
-		<p class="desc">{project.description}</p>
-		<div class="actions">
-			<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-				Open site
-			</a>
-			{#if project.architectureUrl}
-				<a
-					class="btn ghost"
-					href={project.architectureUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					data-action="architecture"
-				>
-					Architecture
+
+		{#if expanded}
+			<p class="desc">{project.description}</p>
+			<div class="actions">
+				<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+					Open site
 				</a>
-			{/if}
-			<a
-				class="btn ghost"
-				href={project.repoUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				data-action="source"
-			>
-				Source
-			</a>
-		</div>
+				{#if project.architectureUrl}
+					<a
+						class="btn ghost"
+						href={project.architectureUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Architecture
+					</a>
+				{/if}
+				<a class="btn ghost" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+					Source
+				</a>
+			</div>
+		{:else}
+			<p class="desc compact">{project.description}</p>
+		{/if}
 	</div>
 </article>
 
@@ -84,62 +85,62 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		height: 100%;
-		overflow: hidden;
 		background: var(--surface);
 		border: 1px solid var(--border);
 		border-radius: var(--radius);
 		box-shadow: var(--shadow-card);
 		outline: none;
+		overflow: hidden;
 		transition:
-			border-color 0.18s ease,
-			box-shadow 0.22s ease,
-			transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
-		opacity: 0;
-		transform: translateY(14px);
-	}
-
-	.card.revealed {
-		/* `both` keeps opacity/transform after the animation (forwards fixes vanishing cards). */
-		animation: card-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-		animation-delay: calc(var(--reveal-i) * 55ms);
-	}
-
-	@keyframes card-reveal {
-		from {
-			opacity: 0;
-			transform: translateY(14px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	.card:hover {
-		border-color: var(--border-hover);
-		box-shadow: var(--shadow-card-hover);
+			border-color 0.2s ease,
+			box-shadow 0.25s ease,
+			transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
 	.card.focused {
-		border-color: var(--accent);
+		border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
 		box-shadow:
-			0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent),
+			0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent),
 			var(--shadow-card-hover);
-		transform: translateY(-3px) scale(1.012);
 	}
 
-	.card.focused .preview img {
-		filter: saturate(1.05) contrast(1.02);
+	.card.expanded {
+		border-color: var(--accent);
+		transform: scale(1.01);
+		z-index: 1;
+	}
+
+	.preview-reveal {
+		display: grid;
+		grid-template-rows: 0fr;
+		opacity: 0;
+		transition:
+			grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 0.35s ease;
+	}
+
+	.preview-reveal.open {
+		grid-template-rows: 1fr;
+		opacity: 1;
+	}
+
+	.preview-reveal-inner {
+		overflow: hidden;
+		min-height: 0;
 	}
 
 	.preview {
 		position: relative;
 		display: block;
 		aspect-ratio: 16 / 9;
+		max-height: min(52vh, 420px);
 		overflow: hidden;
 		border-bottom: 1px solid var(--border);
 		background: var(--bg);
+	}
+
+	.card.expanded .preview {
+		max-height: min(58vh, 480px);
 	}
 
 	.preview img {
@@ -147,14 +148,12 @@
 		height: 100%;
 		object-fit: cover;
 		object-position: top center;
-		transition:
-			transform 0.35s ease,
-			filter 0.25s ease;
+		transition: transform 0.4s ease;
 	}
 
-	.preview:hover img,
+	.card.expanded .preview img,
 	.card.focused .preview img {
-		transform: scale(1.03);
+		transform: scale(1.02);
 	}
 
 	.preview-overlay {
@@ -163,42 +162,52 @@
 		display: flex;
 		align-items: flex-end;
 		justify-content: flex-end;
-		padding: 0.55rem 0.65rem;
+		padding: 0.65rem 0.75rem;
 		font-family: var(--font-mono);
-		font-size: 0.68rem;
+		font-size: 0.72rem;
 		font-weight: 600;
 		color: #f8fafc;
-		background: linear-gradient(to top, rgba(28, 25, 23, 0.55), transparent 55%);
+		background: linear-gradient(to top, rgba(28, 25, 23, 0.6), transparent 50%);
 		opacity: 0;
-		transition: opacity 0.2s ease;
+		transition: opacity 0.25s ease;
 	}
 
-	.preview:hover .preview-overlay,
-	.card.focused .preview-overlay {
+	.card.expanded .preview-overlay,
+	.preview:hover .preview-overlay {
 		opacity: 1;
 	}
 
 	.body {
 		display: flex;
 		flex-direction: column;
-		gap: 0.55rem;
-		flex: 1;
-		padding: 0.95rem 1rem 1rem;
+		gap: 0.45rem;
+		padding: 0.75rem 1rem 0.85rem;
+	}
+
+	.card.expanded .body {
+		padding: 1rem 1.15rem 1.1rem;
+		gap: 0.65rem;
 	}
 
 	header {
 		display: flex;
-		flex-direction: column;
-		gap: 0.45rem;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.35rem 0.75rem;
 	}
 
 	h2 {
 		margin: 0;
 		font-family: var(--font-serif);
-		font-size: 1.1rem;
+		font-size: 1.05rem;
 		font-weight: 600;
 		letter-spacing: -0.01em;
 		line-height: 1.3;
+	}
+
+	.card.expanded h2 {
+		font-size: 1.25rem;
 	}
 
 	h2 a {
@@ -213,18 +222,18 @@
 	.tags {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.35rem;
+		gap: 0.3rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
 
 	.tags li {
-		font-size: 0.65rem;
+		font-size: 0.62rem;
 		font-weight: 600;
 		letter-spacing: 0.03em;
 		text-transform: uppercase;
-		padding: 0.12rem 0.4rem;
+		padding: 0.1rem 0.38rem;
 		border-radius: 6px;
 		color: var(--accent);
 		background: var(--accent-soft);
@@ -232,17 +241,25 @@
 
 	.desc {
 		margin: 0;
-		flex: 1;
 		color: var(--muted);
 		line-height: 1.5;
 		font-size: 0.88rem;
+	}
+
+	.desc.compact {
+		font-size: 0.82rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.actions {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.35rem;
-		padding-top: 0.15rem;
+		padding-top: 0.1rem;
 	}
 
 	.btn {
@@ -258,22 +275,7 @@
 		transition:
 			background 0.12s ease,
 			border-color 0.12s ease,
-			color 0.12s ease,
-			transform 0.12s ease;
-	}
-
-	.card.focused .btn.primary {
-		animation: btn-pulse 1.4s ease-in-out infinite;
-	}
-
-	@keyframes btn-pulse {
-		0%,
-		100% {
-			box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 35%, transparent);
-		}
-		50% {
-			box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 0%, transparent);
-		}
+			color 0.12s ease;
 	}
 
 	.primary {
@@ -298,22 +300,21 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.card {
+		.preview-reveal {
+			transition: none;
+		}
+
+		.preview-reveal.open {
 			opacity: 1;
-			transform: none;
-			animation: none !important;
-		}
-
-		.card.revealed {
-			animation: none;
-		}
-
-		.card.focused .btn.primary {
-			animation: none;
+			grid-template-rows: 1fr;
 		}
 
 		.preview img {
 			transition: none;
+		}
+
+		.card.expanded {
+			transform: none;
 		}
 	}
 </style>
