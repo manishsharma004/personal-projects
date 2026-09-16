@@ -100,11 +100,16 @@
 	}
 
 	.card.revealed {
-		animation: card-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+		/* `both` keeps opacity/transform after the animation (forwards fixes vanishing cards). */
+		animation: card-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 		animation-delay: calc(var(--reveal-i) * 55ms);
 	}
 
 	@keyframes card-reveal {
+		from {
+			opacity: 0;
+			transform: translateY(14px);
+		}
 		to {
 			opacity: 1;
 			transform: translateY(0);
