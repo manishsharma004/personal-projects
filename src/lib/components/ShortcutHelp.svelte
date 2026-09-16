@@ -2,6 +2,8 @@
 	let { open = false, onClose }: { open?: boolean; onClose: () => void } = $props();
 
 	const shortcuts = [
+		{ keys: '1 / 2 / 3', desc: 'List, grid, or split view' },
+		{ keys: '[ / ]', desc: 'Cycle layout view' },
 		{ keys: '/', desc: 'Focus search' },
 		{ keys: 'Esc', desc: 'Clear search / close help' },
 		{ keys: 'J / ↓', desc: 'Next project (expands preview)' },

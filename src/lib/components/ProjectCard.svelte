@@ -5,15 +5,18 @@
 	let {
 		project,
 		focused = false,
-		expanded = false
+		expanded = false,
+		variant = 'list'
 	}: {
 		project: PersonalProject;
 		focused?: boolean;
 		expanded?: boolean;
+		variant?: 'list' | 'grid' | 'compact';
 	} = $props();
 
 	const previewSrc = $derived(`${base}/previews/${project.id}.png`);
-	const showPreview = $derived(expanded || focused);
+	const showPreview = $derived(variant === 'grid' || (variant === 'list' && expanded));
+	const showFullBody = $derived(variant === 'grid' || expanded);
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -21,6 +24,8 @@
 	class="card"
 	class:focused
 	class:expanded
+	class:variant-grid={variant === 'grid'}
+	class:variant-compact={variant === 'compact'}
 	tabindex={focused ? 0 : -1}
 	data-project-id={project.id}
 	aria-label={project.title}
@@ -54,7 +59,7 @@
 			</ul>
 		</header>
 
-		{#if expanded}
+		{#if showFullBody}
 			<p class="desc">{project.description}</p>
 			<div class="actions">
 				<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
@@ -74,7 +79,7 @@
 					Source
 				</a>
 			</div>
-		{:else}
+		{:else if variant !== 'compact'}
 			<p class="desc compact">{project.description}</p>
 		{/if}
 	</div>
@@ -104,10 +109,26 @@
 			var(--shadow-card-hover);
 	}
 
-	.card.expanded {
+	.card.expanded:not(.variant-grid) {
 		border-color: var(--accent);
 		transform: scale(1.01);
 		z-index: 1;
+	}
+
+	.card.variant-grid .preview {
+		max-height: 200px;
+	}
+
+	.card.variant-compact .body {
+		padding: 0.55rem 0.75rem;
+	}
+
+	.card.variant-compact h2 {
+		font-size: 0.95rem;
+	}
+
+	.card.variant-compact .tags li {
+		font-size: 0.58rem;
 	}
 
 	.preview-reveal {

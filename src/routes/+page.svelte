@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
+	import ProjectStage from '$lib/components/ProjectStage.svelte';
 	import ShortcutHelp from '$lib/components/ShortcutHelp.svelte';
+	import ViewModeSwitch from '$lib/components/ViewModeSwitch.svelte';
 	import { personalProjects, type PersonalProject } from '$lib/data/projects';
+	import { loadViewMode, saveViewMode, type ViewMode } from '$lib/viewMode';
 
 	const githubProfile = 'https://github.com/manishsharma004';
 
@@ -10,6 +13,19 @@
 	let focusIndex = $state(0);
 	let helpOpen = $state(false);
 	let searchInput = $state<HTMLInputElement | null>(null);
+	let viewMode = $state<ViewMode>('list');
+
+	function setViewMode(mode: ViewMode) {
+		viewMode = mode;
+		saveViewMode(mode);
+	}
+
+	function cycleViewMode(delta: number) {
+		const modes: ViewMode[] = ['list', 'grid', 'split'];
+		const i = modes.indexOf(viewMode);
+		const next = modes[(i + delta + modes.length) % modes.length];
+		setViewMode(next);
+	}
 
 	const filtered = $derived(
 		personalProjects.filter((p) => {
@@ -63,6 +79,8 @@
 	}
 
 	onMount(() => {
+		viewMode = loadViewMode();
+
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				if (helpOpen) {
@@ -90,6 +108,34 @@
 				e.preventDefault();
 				searchInput?.focus();
 				return;
+			}
+
+			if (!isTypingTarget(e.target) && !e.metaKey && !e.ctrlKey) {
+				if (e.key === '1') {
+					setViewMode('list');
+					e.preventDefault();
+					return;
+				}
+				if (e.key === '2') {
+					setViewMode('grid');
+					e.preventDefault();
+					return;
+				}
+				if (e.key === '3') {
+					setViewMode('split');
+					e.preventDefault();
+					return;
+				}
+				if (e.key === ']') {
+					cycleViewMode(1);
+					e.preventDefault();
+					return;
+				}
+				if (e.key === '[') {
+					cycleViewMode(-1);
+					e.preventDefault();
+					return;
+				}
 			}
 
 			if (isTypingTarget(e.target) && e.key !== 'ArrowDown' && e.key !== 'ArrowUp') {
@@ -167,7 +213,7 @@
 			Static sites and browser tools on
 			<a href="https://manishsharma004.github.io/" target="_blank" rel="noopener noreferrer"
 				>manishsharma004.github.io</a
-			>. Use <kbd>J</kbd>/<kbd>K</kbd> to focus a project — the card expands with a live screenshot preview. Press <kbd>?</kbd> for shortcuts.
+			>. Switch layout with <kbd>1</kbd> list · <kbd>2</kbd> grid · <kbd>3</kbd> split. Use <kbd>J</kbd>/<kbd>K</kbd> to move focus. Press <kbd>?</kbd> for shortcuts.
 		</p>
 	</section>
 
@@ -190,6 +236,7 @@
 				/>
 			</label>
 			<div class="command-meta">
+				<ViewModeSwitch value={viewMode} onchange={setViewMode} />
 				<span class="focus-readout" aria-live="polite">
 					{#if filtered.length > 0}
 						<span class="mono">{focusIndex + 1}</span>/<span class="mono">{filtered.length}</span>
@@ -209,6 +256,42 @@
 
 		{#if filtered.length === 0}
 			<p class="empty">No projects match <code>{search}</code>. <button type="button" onclick={() => (search = '')}>Clear</button></p>
+		{:else if viewMode === 'split'}
+			<div class="split-layout">
+				<ul class="split-nav" aria-label="Projects">
+					{#each filtered as project, i (project.id)}
+						<li
+							class:selected={i === focusIndex}
+							onmouseenter={() => (focusIndex = i)}
+							onfocusin={() => (focusIndex = i)}
+						>
+							<ProjectCard
+								{project}
+								variant="compact"
+								focused={i === focusIndex}
+								expanded={false}
+							/>
+						</li>
+					{/each}
+				</ul>
+				<ProjectStage project={focusedProject()} />
+			</div>
+		{:else if viewMode === 'grid'}
+			<ul class="project-grid">
+				{#each filtered as project, i (project.id)}
+					<li
+						onmouseenter={() => (focusIndex = i)}
+						onfocusin={() => (focusIndex = i)}
+					>
+						<ProjectCard
+							{project}
+							variant="grid"
+							focused={i === focusIndex}
+							expanded={true}
+						/>
+					</li>
+				{/each}
+			</ul>
 		{:else}
 			<ul class="project-list">
 				{#each filtered as project, i (project.id)}
@@ -219,6 +302,7 @@
 					>
 						<ProjectCard
 							{project}
+							variant="list"
 							focused={i === focusIndex}
 							expanded={i === focusIndex}
 						/>
@@ -392,7 +476,9 @@
 
 	.command-meta {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
+		justify-content: flex-end;
 		gap: 0.5rem;
 	}
 
@@ -476,6 +562,63 @@
 
 	.project-list > li.expanded {
 		margin-block: 0.35rem;
+	}
+
+	.project-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.project-grid > li {
+		display: flex;
+		min-width: 0;
+	}
+
+	.split-layout {
+		display: grid;
+		grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+		gap: 0.75rem;
+		align-items: start;
+	}
+
+	.split-nav {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		max-height: min(72vh, 720px);
+		overflow: auto;
+	}
+
+	.split-nav > li {
+		display: flex;
+		min-width: 0;
+	}
+
+	.split-nav > li.selected :global(.card) {
+		border-color: var(--accent);
+	}
+
+	@media (max-width: 860px) {
+		.split-layout {
+			grid-template-columns: 1fr;
+		}
+
+		.split-nav {
+			max-height: none;
+			order: 2;
+		}
+
+		.split-layout :global(.stage) {
+			position: static;
+			order: 1;
+		}
 	}
 
 	.foot {
