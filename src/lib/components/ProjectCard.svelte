@@ -18,6 +18,16 @@
 		<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
 			Open site
 		</a>
+		{#if project.architectureUrl}
+			<a
+				class="btn ghost"
+				href={project.architectureUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				Architecture
+			</a>
+		{/if}
 		<a class="btn ghost" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
 			Source
 		</a>

@@ -5,13 +5,25 @@ export type PersonalProject = {
 	tags: string[];
 	liveUrl: string;
 	repoUrl: string;
+	/** Archify runtime map on GitHub Pages, when the repo publishes one */
+	architectureUrl?: string;
 };
 
 const pagesBase = 'https://manishsharma004.github.io';
 const repoBase = 'https://github.com/manishsharma004';
 
-/** Live GitHub Pages sites under manishsharma004.github.io */
+/** Live GitHub Pages sites — featured order first, then the rest. */
 export const personalProjects: PersonalProject[] = [
+	{
+		id: 'LLM101n-ai-implementation',
+		title: 'LLM101n — Storyteller',
+		description:
+			'Browser implementation of the LLM101n syllabus with in-tab labs and a Storyteller flow.',
+		tags: ['React', 'LLM', 'Education'],
+		liveUrl: `${pagesBase}/LLM101n-ai-implementation/`,
+		repoUrl: `${repoBase}/LLM101n-ai-implementation`,
+		architectureUrl: `${pagesBase}/LLM101n-ai-implementation/architecture/llm101n-runtime.architecture.html`
+	},
 	{
 		id: 'developer-basics',
 		title: 'Developer Basics',
@@ -19,15 +31,8 @@ export const personalProjects: PersonalProject[] = [
 			'Interactive course with in-browser Python labs — variables through APIs, React, and tooling.',
 		tags: ['React', 'TypeScript', 'Pyodide', 'Education'],
 		liveUrl: `${pagesBase}/developer-basics/`,
-		repoUrl: `${repoBase}/developer-basics`
-	},
-	{
-		id: 'retro-games',
-		title: 'Retro Games',
-		description: 'Browser NES and SNES emulator with ROM library, shaders, and WebRTC multiplayer.',
-		tags: ['React', 'Emulation', 'WebRTC'],
-		liveUrl: `${pagesBase}/retro-games/`,
-		repoUrl: `${repoBase}/retro-games`
+		repoUrl: `${repoBase}/developer-basics`,
+		architectureUrl: `${pagesBase}/developer-basics/architecture/developer-basics-runtime.architecture.html`
 	},
 	{
 		id: 'system-design-copilot',
@@ -38,29 +43,36 @@ export const personalProjects: PersonalProject[] = [
 		repoUrl: `${repoBase}/system-design-copilot`
 	},
 	{
-		id: 'system-design-interview-prep',
-		title: 'System Design Interview Prep',
-		description: 'Practice scenarios and notes for distributed systems and architecture interviews.',
-		tags: ['Study', 'System design'],
-		liveUrl: `${pagesBase}/system-design-interview-prep/`,
-		repoUrl: `${repoBase}/system-design-interview-prep`
-	},
-	{
-		id: 'LLM101n-ai-implementation',
-		title: 'LLM101n — Storyteller',
-		description:
-			'Browser implementation of the LLM101n syllabus with in-tab labs and a Storyteller flow.',
-		tags: ['React', 'LLM', 'Education'],
-		liveUrl: `${pagesBase}/LLM101n-ai-implementation/`,
-		repoUrl: `${repoBase}/LLM101n-ai-implementation`
-	},
-	{
 		id: 'agent-games',
 		title: 'Agent Games',
 		description: 'Small games and experiments built around agent-style workflows.',
 		tags: ['Games', 'Agents'],
 		liveUrl: `${pagesBase}/agent-games/`,
 		repoUrl: `${repoBase}/agent-games`
+	},
+	{
+		id: 'template-viewer',
+		title: 'Template Viewer',
+		description: 'Preview and compare document or UI templates in the browser.',
+		tags: ['Tools', 'Viewer'],
+		liveUrl: `${pagesBase}/template-viewer/`,
+		repoUrl: `${repoBase}/template-viewer`
+	},
+	{
+		id: 'retro-games',
+		title: 'Retro Games',
+		description: 'Browser NES and SNES emulator with ROM library, shaders, and WebRTC multiplayer.',
+		tags: ['React', 'Emulation', 'WebRTC'],
+		liveUrl: `${pagesBase}/retro-games/`,
+		repoUrl: `${repoBase}/retro-games`
+	},
+	{
+		id: 'system-design-interview-prep',
+		title: 'System Design Interview Prep',
+		description: 'Practice scenarios and notes for distributed systems and architecture interviews.',
+		tags: ['Study', 'System design'],
+		liveUrl: `${pagesBase}/system-design-interview-prep/`,
+		repoUrl: `${repoBase}/system-design-interview-prep`
 	},
 	{
 		id: 'chess-clock',
@@ -101,13 +113,5 @@ export const personalProjects: PersonalProject[] = [
 		tags: ['Games', 'Cards'],
 		liveUrl: `${pagesBase}/exploding-kittens-normal-deck/`,
 		repoUrl: `${repoBase}/exploding-kittens-normal-deck`
-	},
-	{
-		id: 'template-viewer',
-		title: 'Template Viewer',
-		description: 'Preview and compare document or UI templates in the browser.',
-		tags: ['Tools', 'Viewer'],
-		liveUrl: `${pagesBase}/template-viewer/`,
-		repoUrl: `${repoBase}/template-viewer`
 	}
 ];
