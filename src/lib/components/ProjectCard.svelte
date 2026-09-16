@@ -9,12 +9,11 @@
 		<h2>
 			<a href={project.liveUrl} target="_blank" rel="noopener noreferrer">{project.title}</a>
 		</h2>
-		<p class="tags" aria-label="Technologies">
-			{#each project.tags as tag, i}
-				{#if i > 0}<span class="sep" aria-hidden="true">·</span>{/if}
-				<span>{tag}</span>
+		<ul class="tags" aria-label="Technologies">
+			{#each project.tags as tag}
+				<li>{tag}</li>
 			{/each}
-		</p>
+		</ul>
 	</header>
 	<p class="desc">{project.description}</p>
 	<div class="actions">
@@ -41,30 +40,38 @@
 	.card {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: 0.65rem;
 		height: 100%;
-		padding: 1.35rem 1.4rem 1.25rem;
-		background: inherit;
-		transition: background 0.15s ease;
+		padding: 1.15rem 1.2rem 1.1rem;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow-card);
+		transition:
+			border-color 0.15s ease,
+			box-shadow 0.15s ease,
+			transform 0.15s ease;
 	}
 
 	.card:hover {
-		background: var(--surface);
+		border-color: var(--border-hover);
+		box-shadow: var(--shadow-card-hover);
+		transform: translateY(-1px);
 	}
 
 	header {
 		display: flex;
 		flex-direction: column;
-		gap: 0.35rem;
+		gap: 0.5rem;
 	}
 
 	h2 {
 		margin: 0;
 		font-family: var(--font-serif);
-		font-size: 1.2rem;
+		font-size: 1.15rem;
 		font-weight: 600;
 		letter-spacing: -0.01em;
-		line-height: 1.25;
+		line-height: 1.3;
 	}
 
 	h2 a {
@@ -77,16 +84,23 @@
 	}
 
 	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
 		margin: 0;
-		font-family: var(--font-mono);
-		font-size: 0.7rem;
-		color: var(--faint);
-		letter-spacing: 0.02em;
+		padding: 0;
+		list-style: none;
 	}
 
-	.sep {
-		margin-inline: 0.35rem;
-		opacity: 0.5;
+	.tags li {
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		padding: 0.15rem 0.45rem;
+		border-radius: 6px;
+		color: var(--accent);
+		background: var(--accent-soft);
 	}
 
 	.desc {
@@ -94,22 +108,22 @@
 		flex: 1;
 		color: var(--muted);
 		line-height: 1.55;
-		font-size: 0.94rem;
+		font-size: 0.92rem;
 	}
 
 	.actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.45rem;
-		padding-top: 0.35rem;
+		gap: 0.4rem;
+		padding-top: 0.25rem;
 	}
 
 	.btn {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.4rem 0.75rem;
-		border-radius: 8px;
+		padding: 0.42rem 0.8rem;
+		border-radius: 9px;
 		font-size: 0.8125rem;
 		font-weight: 600;
 		text-decoration: none;
@@ -122,12 +136,12 @@
 
 	.primary {
 		background: var(--accent);
-		color: #fff;
+		color: #f8fafc;
 	}
 
 	.primary:hover {
 		background: var(--accent-hover);
-		color: #fff;
+		color: #f8fafc;
 	}
 
 	.ghost {

@@ -45,8 +45,8 @@
 			<p class="count" aria-live="polite">{personalProjects.length} projects</p>
 		</div>
 		<ul class="grid">
-			{#each personalProjects as project, i (project.id)}
-				<li class:featured={i < 5}>
+			{#each personalProjects as project (project.id)}
+				<li>
 					<ProjectCard {project} />
 				</li>
 			{/each}
@@ -78,7 +78,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		padding-block: 1.25rem 0.5rem;
+		padding-block: 1.25rem 0.75rem;
 		border-bottom: 1px solid var(--border);
 	}
 
@@ -102,8 +102,8 @@
 		width: 2rem;
 		height: 2rem;
 		border-radius: 8px;
-		background: var(--ink);
-		color: var(--bg);
+		background: var(--accent);
+		color: #f8fafc;
 		font-size: 0.7rem;
 		font-weight: 700;
 		letter-spacing: 0.04em;
@@ -180,23 +180,17 @@
 
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-		gap: 1px;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+		gap: 0.75rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		background: var(--border);
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
-		overflow: hidden;
+		align-items: stretch;
 	}
 
 	.grid > li {
-		background: var(--bg);
-	}
-
-	.grid > li.featured {
-		background: var(--surface);
+		display: flex;
+		min-width: 0;
 	}
 
 	.foot {
