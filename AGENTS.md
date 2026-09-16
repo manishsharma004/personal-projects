@@ -29,4 +29,4 @@ SvelteKit static site that lists personal projects published on GitHub Pages und
 
 ## Deploy
 
-GitHub Actions workflow `.github/workflows/deploy.yml` runs on push to `main`: `bun install --frozen-lockfile`, `bun run check`, `bun run build` with `BASE_PATH`, then deploys the `build` folder to GitHub Pages.
+Deploy workflow template: `docs/github-pages-deploy.workflow.yml` (copy to `.github/workflows/deploy.yml`). On push to `main` it runs `bun install --frozen-lockfile`, `bun run check`, `bun run build` with `BASE_PATH`, then deploys `build` to GitHub Pages.
