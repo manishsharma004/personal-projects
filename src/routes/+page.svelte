@@ -14,30 +14,39 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
 		rel="stylesheet"
 	/>
 </svelte:head>
 
 <div class="page">
-	<header class="hero wrap">
-		<p class="eyebrow">GitHub Pages</p>
-		<h1>Personal projects</h1>
-		<p class="lede">
-			Browser apps and learning tools I ship as static sites on
-			<strong>manishsharma004.github.io</strong>. Pick a project to open the live site or view
-			source on GitHub.
-		</p>
-		<a class="profile" href={githubProfile} target="_blank" rel="noopener noreferrer">
-			@manishsharma004 on GitHub
+	<header class="top wrap">
+		<a class="brand" href={githubProfile} target="_blank" rel="noopener noreferrer">
+			<span class="mark" aria-hidden="true">MS</span>
+			<span class="brand-text">Manish Sharma</span>
 		</a>
+		<span class="top-note">GitHub Pages index</span>
 	</header>
 
+	<section class="hero wrap">
+		<p class="eyebrow">Side projects</p>
+		<h1>Personal projects</h1>
+		<p class="lede">
+			Static sites and browser tools hosted at
+			<a href="https://manishsharma004.github.io/" target="_blank" rel="noopener noreferrer"
+				>manishsharma004.github.io</a
+			>. Each card links to the live app and its repository.
+		</p>
+	</section>
+
 	<main class="wrap">
-		<p class="count" aria-live="polite">{personalProjects.length} live sites</p>
+		<div class="list-head">
+			<h2 class="list-title">Live sites</h2>
+			<p class="count" aria-live="polite">{personalProjects.length} projects</p>
+		</div>
 		<ul class="grid">
-			{#each personalProjects as project (project.id)}
-				<li>
+			{#each personalProjects as project, i (project.id)}
+				<li class:featured={i < 5}>
 					<ProjectCard {project} />
 				</li>
 			{/each}
@@ -46,94 +55,163 @@
 
 	<footer class="wrap foot">
 		<p>
-			This index is built with
+			Built with
 			<a href="https://svelte.dev/docs/kit" target="_blank" rel="noopener noreferrer">SvelteKit</a>
-			and deployed from the
+			·
 			<a
 				href="https://github.com/manishsharma004/personal-projects"
 				target="_blank"
 				rel="noopener noreferrer">personal-projects</a
 			>
-			repository.
+			repo
 		</p>
 	</footer>
 </div>
 
 <style>
 	.page {
-		padding-block: 2.5rem 3rem;
+		padding-bottom: 4rem;
+	}
+
+	.top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 1.25rem 0.5rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		color: var(--ink);
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+
+	.brand:hover {
+		color: var(--accent);
+	}
+
+	.mark {
+		display: inline-grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 8px;
+		background: var(--ink);
+		color: var(--bg);
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+	}
+
+	.top-note {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		color: var(--faint);
+		letter-spacing: 0.02em;
 	}
 
 	.hero {
-		padding-bottom: 2rem;
+		padding-block: 2.75rem 2rem;
 	}
 
 	.eyebrow {
-		margin: 0 0 0.35rem;
-		font-size: 0.8rem;
-		font-weight: 700;
+		margin: 0 0 0.5rem;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		font-weight: 500;
 		text-transform: uppercase;
-		letter-spacing: 0.12em;
-		color: var(--accent-strong);
+		letter-spacing: 0.14em;
+		color: var(--faint);
 	}
 
 	h1 {
-		margin: 0 0 0.65rem;
-		font-size: clamp(2rem, 4vw, 2.75rem);
-		font-weight: 750;
-		letter-spacing: -0.03em;
+		margin: 0 0 1rem;
+		font-family: var(--font-serif);
+		font-size: clamp(2.25rem, 4.5vw, 3rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		color: var(--ink);
+		line-height: 1.15;
 	}
 
 	.lede {
 		margin: 0;
-		max-width: 52ch;
+		max-width: 42rem;
 		font-size: 1.05rem;
 		color: var(--muted);
 	}
 
-	.profile {
-		display: inline-flex;
-		margin-top: 1.25rem;
-		padding: 0.5rem 0.9rem;
-		border-radius: 999px;
-		font-weight: 600;
-		font-size: 0.9rem;
-		text-decoration: none;
-		border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-		background: color-mix(in srgb, var(--surface) 85%, transparent);
+	.lede a {
+		font-weight: 500;
+		text-underline-offset: 3px;
 	}
 
-	.profile:hover {
-		border-color: var(--accent-strong);
-		color: var(--accent-strong);
+	.list-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 1.25rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.list-title {
+		margin: 0;
+		font-size: 0.85rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--muted);
 	}
 
 	.count {
-		margin: 0 0 1rem;
-		font-size: 0.9rem;
-		color: var(--muted);
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		color: var(--faint);
 	}
 
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-		gap: 1rem;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+		gap: 1px;
 		margin: 0;
 		padding: 0;
 		list-style: none;
+		background: var(--border);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+
+	.grid > li {
+		background: var(--bg);
+	}
+
+	.grid > li.featured {
+		background: var(--surface);
 	}
 
 	.foot {
-		margin-top: 2.5rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+		margin-top: 3rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
 		font-size: 0.9rem;
 		color: var(--muted);
 	}
 
+	.foot p {
+		margin: 0;
+	}
+
 	.foot a {
-		color: var(--accent-strong);
-		text-decoration-thickness: 1px;
 		text-underline-offset: 3px;
 	}
 </style>
