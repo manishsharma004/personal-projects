@@ -1,1 +1,33 @@
 # personal-projects
+
+SvelteKit site that lists personal projects hosted on [GitHub Pages](https://manishsharma004.github.io/).
+
+Live site (after Pages is enabled): `https://manishsharma004.github.io/personal-projects/`
+
+## Requirements
+
+[Bun](https://bun.sh/) only — do not use npm/yarn/pnpm for this repo.
+
+## Commands
+
+```bash
+bun install
+bun run dev          # http://localhost:5173/
+bun run build        # set BASE_PATH=/personal-projects/ for production parity
+bun run preview
+bun run check
+```
+
+Production builds expect:
+
+```bash
+BASE_PATH=/personal-projects bun run build
+```
+
+## Adding a project
+
+Edit `src/lib/data/projects.ts` with the repo name, description, tags, and live URL.
+
+## Deploy
+
+Pushes to `main` run `.github/workflows/deploy.yml` (Bun install, check, build, GitHub Pages).
