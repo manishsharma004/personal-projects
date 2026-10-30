@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PersonalProject } from '$lib/data/projects';
+	import { projectPrimaryUrl, type PersonalProject } from '$lib/data/projects';
 	import { base } from '$app/paths';
 
 	let {
@@ -14,8 +14,11 @@
 		variant?: 'list' | 'grid' | 'compact';
 	} = $props();
 
+	const primaryUrl = $derived(projectPrimaryUrl(project));
 	const previewSrc = $derived(`${base}/previews/${project.id}.png`);
-	const showPreview = $derived(variant === 'grid' || (variant === 'list' && expanded));
+	const showPreview = $derived(
+		Boolean(project.liveUrl) && (variant === 'grid' || (variant === 'list' && expanded))
+	);
 	const showFullBody = $derived(variant === 'grid' || expanded);
 </script>
 
@@ -31,26 +34,28 @@
 	aria-label={project.title}
 	aria-expanded={expanded}
 >
-	<div class="preview-reveal" class:open={showPreview}>
-		<div class="preview-reveal-inner">
-			<a class="preview" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-				<img
-					src={previewSrc}
-					alt=""
-					width="960"
-					height="540"
-					loading={expanded ? 'eager' : 'lazy'}
-					decoding="async"
-				/>
-				<span class="preview-overlay" aria-hidden="true">Open live site →</span>
-			</a>
+	{#if project.liveUrl}
+		<div class="preview-reveal" class:open={showPreview}>
+			<div class="preview-reveal-inner">
+				<a class="preview" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+					<img
+						src={previewSrc}
+						alt=""
+						width="960"
+						height="540"
+						loading={expanded ? 'eager' : 'lazy'}
+						decoding="async"
+					/>
+					<span class="preview-overlay" aria-hidden="true">Open live site →</span>
+				</a>
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<div class="body">
 		<header>
 			<h2>
-				<a href={project.liveUrl} target="_blank" rel="noopener noreferrer">{project.title}</a>
+				<a href={primaryUrl} target="_blank" rel="noopener noreferrer">{project.title}</a>
 			</h2>
 			<ul class="tags" aria-label="Technologies">
 				{#each project.tags as tag}
@@ -62,22 +67,28 @@
 		{#if showFullBody}
 			<p class="desc">{project.description}</p>
 			<div class="actions">
-				<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-					Open site
-				</a>
-				{#if project.architectureUrl}
-					<a
-						class="btn ghost"
-						href={project.architectureUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Architecture
+				{#if project.liveUrl}
+					<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+						Open site
+					</a>
+					{#if project.architectureUrl}
+						<a
+							class="btn ghost"
+							href={project.architectureUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Architecture
+						</a>
+					{/if}
+					<a class="btn ghost" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+						Source
+					</a>
+				{:else}
+					<a class="btn primary" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+						GitHub
 					</a>
 				{/if}
-				<a class="btn ghost" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
-					Source
-				</a>
 			</div>
 		{:else if variant !== 'compact'}
 			<p class="desc compact">{project.description}</p>

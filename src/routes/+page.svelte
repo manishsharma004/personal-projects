@@ -4,7 +4,7 @@
 	import ProjectStage from '$lib/components/ProjectStage.svelte';
 	import ShortcutHelp from '$lib/components/ShortcutHelp.svelte';
 	import ViewModeSwitch from '$lib/components/ViewModeSwitch.svelte';
-	import { personalProjects, type PersonalProject } from '$lib/data/projects';
+	import { personalProjects, projectPrimaryUrl, type PersonalProject } from '$lib/data/projects';
 	import { loadViewMode, saveViewMode, type ViewMode } from '$lib/viewMode';
 
 	const githubProfile = 'https://github.com/manishsharma004';
@@ -59,7 +59,7 @@
 
 	function openLive() {
 		const p = focusedProject();
-		if (p) window.open(p.liveUrl, '_blank', 'noopener,noreferrer');
+		if (p) window.open(projectPrimaryUrl(p), '_blank', 'noopener,noreferrer');
 	}
 
 	function openSource() {
