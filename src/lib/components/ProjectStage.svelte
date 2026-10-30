@@ -9,10 +9,12 @@
 
 <section class="stage" aria-label="Project preview">
 	{#if project}
-		<a class="preview" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-			<img src={previewSrc} alt="" width="960" height="540" loading="eager" decoding="async" />
-			<span class="overlay">Open live site →</span>
-		</a>
+		{#if project.liveUrl}
+			<a class="preview" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+				<img src={previewSrc} alt="" width="960" height="540" loading="eager" decoding="async" />
+				<span class="overlay">Open live site →</span>
+			</a>
+		{/if}
 		<div class="meta">
 			<h2>{project.title}</h2>
 			<p class="desc">{project.description}</p>
@@ -22,22 +24,28 @@
 				{/each}
 			</ul>
 			<div class="actions">
-				<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-					Open site
-				</a>
-				{#if project.architectureUrl}
-					<a
-						class="btn ghost"
-						href={project.architectureUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Architecture
+				{#if project.liveUrl}
+					<a class="btn primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+						Open site
+					</a>
+					{#if project.architectureUrl}
+						<a
+							class="btn ghost"
+							href={project.architectureUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Architecture
+						</a>
+					{/if}
+					<a class="btn ghost" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+						Source
+					</a>
+				{:else}
+					<a class="btn primary" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+						GitHub
 					</a>
 				{/if}
-				<a class="btn ghost" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
-					Source
-				</a>
 			</div>
 		</div>
 	{:else}

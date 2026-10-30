@@ -3,16 +3,21 @@ export type PersonalProject = {
 	title: string;
 	description: string;
 	tags: string[];
-	liveUrl: string;
+	/** Hosted site. Omit when the card should link only to the GitHub repo. */
+	liveUrl?: string;
 	repoUrl: string;
 	/** Archify runtime map on GitHub Pages, when the repo publishes one */
 	architectureUrl?: string;
 };
 
+export function projectPrimaryUrl(project: PersonalProject): string {
+	return project.liveUrl ?? project.repoUrl;
+}
+
 const pagesBase = 'https://manishsharma004.github.io';
 const repoBase = 'https://github.com/manishsharma004';
 
-/** Live GitHub Pages sites — featured order first, then the rest. */
+/** Featured order first, then the rest. Omit liveUrl to link only the GitHub repo. */
 export const personalProjects: PersonalProject[] = [
 	{
 		id: 'LLM101n-ai-implementation',
@@ -113,5 +118,13 @@ export const personalProjects: PersonalProject[] = [
 		tags: ['Games', 'Cards'],
 		liveUrl: `${pagesBase}/exploding-kittens-normal-deck/`,
 		repoUrl: `${repoBase}/exploding-kittens-normal-deck`
+	},
+	{
+		id: 'open-book-reader',
+		title: 'Open Book Reader',
+		description:
+			'Browser book reader with chapter jumps and speech prepared for the open page.',
+		tags: ['Svelte', 'FastAPI', 'Reader'],
+		repoUrl: `${repoBase}/open-book-reader`
 	}
 ];
